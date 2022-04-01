@@ -1,4 +1,5 @@
 import socket
+import json
 
 UDP_IP = {
     "birk": "192.168.0.3",
@@ -11,14 +12,16 @@ RECIEVER = UDP_IP["kent"]
 
 MESSAGE = {
 	"name": "David",
-	"age": 18,
+	"age": "18"
 	}
 
-print(MESSAGE["name"]+" är "+MESSAGE["age"]
-print("sent to "+RECIEVER+" via port "+UDP_PORT)
+json_MESSAGE = json.dumps(MESSAGE)
+
+print(MESSAGE["name"]+" är "+MESSAGE["age"])
+print("sent to "+RECIEVER+" via port "+str(UDP_PORT))
 
 sock = socket.socket(socket.AF_INET, #interrupt
 			socket.SOCK_DGRAM) #UDP
 
-
-sock.sendto(MESSAGE, (RECIEVER, UDP_PORT))
+sock.connect((RECIEVER, UDP_PORT))
+sock.sendall(bytes(json_MESSAGE, "utf-8"))
