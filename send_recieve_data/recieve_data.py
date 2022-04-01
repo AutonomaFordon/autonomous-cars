@@ -1,6 +1,6 @@
 import socket
 
-UDP_IP = "192.168.0.2"
+UDP_IP = "192.168.0.2" # suppose to be the recievers IP
 UDP_PORT = 5005
 
 
