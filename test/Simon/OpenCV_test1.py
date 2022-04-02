@@ -2,12 +2,14 @@
 import cv2 #OpenCV for video processing
 import numpy as np
 import math
+import time
 
 #Setup video feed
 cap = cv2.VideoCapture(0) #Create videocapture object
-cap.set(3, 1600) #Set video stream width
-cap.set(4, 900) #Set video stream height
-cap.set(cv2.CAP_PROP_EXPOSURE,-1) #Set fixed exposure (SHOULD BE CHANGED TO AUTOEXPOSURE? !!!)
+cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1600) #Set video stream width
+cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 900) #Set video stream height
+cap.set(cv2.CAP_PROP_FPS, 90) #Set max frame rate to 5fps
+time.sleep(1) #Let the camera init to light conditions etc
 if not cap.isOpened(): #Check if camera feed is ok
     print("Cannot open camera")
     exit()
@@ -23,7 +25,7 @@ while(True):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY) #Convert to grayscale
     
     #Canny edge detection
-    edges = cv2.Canny(gray,50,200, None, 3)
+    edges = cv2.Canny(frame,50,51, None, 3)
     
     #Hough line detection
     linesP = cv2.HoughLinesP(edges, 1, np.pi / 180, 50, None, 50, 10)
@@ -31,7 +33,7 @@ while(True):
     if linesP is not None:
         for i in range(0, len(linesP)):
             l = linesP[i][0]
-            cv2.line(frame, (l[0], l[1]), (l[2], l[3]), (0,0,255), 1, cv2.LINE_AA)
+            cv2.line(frame, (l[0], l[1]), (l[2], l[3]), (0,0,255), 2, cv2.LINE_AA)
 
     cv2.imshow("Detected Lines (in red) - Probabilistic Line Transform", frame)
     
