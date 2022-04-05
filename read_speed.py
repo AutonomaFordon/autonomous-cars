@@ -2,8 +2,8 @@ import RPi.GPIO as GPIO
 import time
 import math
 
-analog_pin = [13,	# left pin
-			12]		# right pin
+analog_pin = [20,	# left pin
+			16]		# right pin
 
 # setup
 GPIO.setmode(GPIO.BCM)
@@ -14,9 +14,10 @@ GPIO.setup(analog_pin[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 GPIO.setup(analog_pin[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 # factors
-wheel_diameter = 3
+holes = 10
+wheel_diameter = 7
 cercum = wheel_diameter * math.pi
-dis_sensor_holes = cercum / 10
+dis_sensor_holes = cercum / holes
 
 # vars
 prevstate = 0
@@ -36,17 +37,17 @@ speed = 0
 # loop
 
 while True:
-	for i in range(2): 		# Begin with left motor
-		for j in range(4): 	# Three measures for each motor,
-							# first is skipped (will be wrong prbl)
-			currentstate = GPIO.input(analog_pin[i])
-			if (currentstate == 0 and prevstate == 1):
-				if (j==0): continue
-				end = time.time()
-				duration = end-start
-				speed = dis_sensor_holes/duration
-				start = time.time()
-			elif (currentstate == 1 and prevstate == 0):
-				prevstate = 1
-				continue 	# So that the speed doesn't print
-			print("speed left motor: "+speed+" m/s")
+# 	for i in range(2): 		# Begin with left motor
+# 		for j in range(4): 	# Three measures for each motor,
+# 							# first is skipped (will be wrong prbl)
+    currentstate = GPIO.input(analog_pin[0])
+    if (currentstate == 0 and prevstate == 1):
+        if (j==0): continue
+        end = time.time()
+        duration = end-start
+        speed = dis_sensor_holes/duration
+        start = time.time()
+    elif (currentstate == 1 and prevstate == 0):
+        prevstate = 1
+        continue 	# So that the speed doesn't print
+    print("speed left motor: "+speed+" cm/s")
