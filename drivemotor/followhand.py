@@ -63,9 +63,11 @@ def sluta():
 	GPIO.output(motorr[1], False)
 
 def destroy():
-	pwm.stop()
-	GPIO.output(ledPin, GPIO.LOW)
+	pwml.stop()
+	pwmr.stop()
+	GPIO.output(motorl[0], GPIO.LOW)
+	GPIO.output(motorr[0], GPIO.LOW)
 	GPIO.cleanup()
 
 setup()
-destroy()
+loop()

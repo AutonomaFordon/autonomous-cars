@@ -10,8 +10,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
 # set pins to inputs
-GPIO.setup(analog_pin[0], GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(analog_pin[1], GPIO.IN, pull_up_down=GPIO.PUD_UP)
+GPIO.setup(analog_pin[0], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+GPIO.setup(analog_pin[1], GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 
 # factors
 holes = 10
@@ -37,17 +37,27 @@ speed = 0
 # loop
 
 while True:
+    time.sleep(0.001)
 # 	for i in range(2): 		# Begin with left motor
 # 		for j in range(4): 	# Three measures for each motor,
 # 							# first is skipped (will be wrong prbl)
     currentstate = GPIO.input(analog_pin[0])
     if (currentstate == 0 and prevstate == 1):
-        if (j==0): continue
+#         if (j==0):
+#             start = time.time()
+#             continue
         end = time.time()
+        print("end: "+str(time.time()))
         duration = end-start
         speed = dis_sensor_holes/duration
-        start = time.time()
+        start = end
+        print("start: "+str(time.time()))
+        time.sleep(0.02)
     elif (currentstate == 1 and prevstate == 0):
         prevstate = 1
         continue 	# So that the speed doesn't print
-    print("speed left motor: "+speed+" cm/s")
+    else :
+        continue
+    print("speed left motor: "+str(speed)+" cm/s")
+    print("duration: "+str(duration))
+    print("distance: "+str(dis_sensor_holes))
