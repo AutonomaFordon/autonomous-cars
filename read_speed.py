@@ -19,7 +19,7 @@ def setup(rsp=[20,16]):
     holes = 10
     wheel_diameter = 7
     cercum = wheel_diameter * math.pi
-    dis_sensor_holes = cercum / holes
+    global dis_sensor_holes = cercum / holes
 
 
 def read_speed(values=5, motor=0):
@@ -29,28 +29,43 @@ def read_speed(values=5, motor=0):
     start = time.time()
     duration = 0
     speed = 0
+    measured_values = []
 
 
     for i in range(values):
-        #time.sleep(0.001)
-        # take current value
-        currentstate = GPIO.input(analog_pin[0])
-        
-        # if currentstate of pin == 0 & previous state == 1
-        # 
-        if (currentstate == 0 and prevstate == 1):
-            end = time.time()
-            print("end: "+str(time.time()))
-            duration = end-start
-            speed = dis_sensor_holes/duration
-            start = end
-            print("start: "+str(time.time()))
-            time.sleep(0.02)
-        elif (currentstate == 1 and prevstate == 0):
-            prevstate = 1
-            continue 	# So that the speed doesn't print
-        else :
-            continue
-        print("speed left motor: "+str(speed)+" cm/s")
-        print("duration: "+str(duration))
-        print("distance: "+str(dis_sensor_holes))
+        while True:
+            #time.sleep(0.001)
+            # take current value
+            currentstate = GPIO.input(read_speed_pins[motor])
+            
+            # if currentstate of pin == 0 & previous state == 1 =>
+            # => period has ended
+            if (currentstate == 0 and prevstate == 1):
+                # timestamp for end of period and beginning of new
+                timestp = time.time()
+                if (i > 0):
+                    # time of period = timestamp from start - timestamp from end
+                    end = timestp
+                    duration = end-start
+                    
+                    if (speed < 67):
+                        # speed = distance / duration
+                        speed = dis_sensor_holes/duration
+                        
+                        # speed is appended to array
+                        measured_values.append(speed)
+                        break
+                
+                # start of period starts when last ended
+                start = timestp
+                
+                # a small delay to remove faulty values
+                time.sleep(0.02)
+            elif (currentstate == 1 and prevstate == 0):
+                prevstate = 1
+       
+    # return the values measured
+    return measured_values
+
+setup()
+print(read_speed())
