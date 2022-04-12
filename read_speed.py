@@ -66,3 +66,7 @@ def read_speed(values=5, motor=0):
        
     # return the values measured
     return measured_values
+
+setup()
+while True:
+    print(read_speed(motor=1))
