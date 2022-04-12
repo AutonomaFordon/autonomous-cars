@@ -43,14 +43,26 @@ def destroy():
 	GPIO.output(motorr[0], GPIO.LOW)
 	GPIO.cleanup()
 
-def loop(speed=50):
-	pace=10
+def loop():
+	pacel, pacer = 30, 30
 	while True:
-		pwml.ChangeDutyCycle(pace)
+		pwml.ChangeDutyCycle(pacel)
 		GPIO.output(motorl[1], False)
-		currentspeed=rspeed.read_speed(values=2, motor=0)[1]
-		if(pace<=98):
-			if(currentspeed < speed):
-				pace+=2
-			elif(currentspeed > speed):
-				pace-=2
+		pwmr.ChangeDutyCycle(pacer)
+		GPIO.output(motorr[1], False)
+		# set both to a certain speed
+		time.sleep(0.5)
+		lms=rspeed.read_speed(values=1, motor=0)[0]
+		rms=rspeed.read_speed(values=1, motor=1)[0]
+		if(lms<rms-2):
+			pacel+=2
+		elif(rms<lms-2):
+			pacer+=2
+		else:
+			break
+	while True:
+		print("done")
+
+setup()
+rspeed.setup()
+loop()
