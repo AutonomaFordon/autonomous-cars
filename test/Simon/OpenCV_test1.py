@@ -19,7 +19,7 @@ time.sleep(1)
 stream = camera.capture_continuous(rawCapture, format="bgr", use_video_port=True, resize=(640, 480))
 
 while(True):
-    image = next(stream) #Grab new frame
+    image = next(stream) #Grab new frames
     frame = image.array #Convert to array for processing in opencv
     rawCapture.truncate(0) #Clear streem buffer 
     
@@ -51,14 +51,14 @@ while(True):
     if not lines.lengthl:
         print("No lines found. Exiting...")
         break
+
     
     for line in lines:
         for x1,y1,x2,y2 in line:
             cv2.line(line_image,(x1,y1),(x2,y2),(255,0,0),10)
 
     cv2.imshow("Result", line_image)
-    
-    
+
     if cv2.waitKey(1) == ord('q'): #Break if q is pressed
         break
 
