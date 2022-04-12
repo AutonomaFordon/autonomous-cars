@@ -4,8 +4,9 @@ import math
 
 
 def setup(rsp=[20,16]):
-    global read_speed_pins = [rsp[0], # left pin
-                              rsp[1]] # right pin
+    global read_speed_pins
+    read_speed_pins = [ rsp[0], # left pin
+                        rsp[1]] # right pin
     
     # setup
     GPIO.setmode(GPIO.BCM)
@@ -19,7 +20,8 @@ def setup(rsp=[20,16]):
     holes = 10
     wheel_diameter = 7
     cercum = wheel_diameter * math.pi
-    global dis_sensor_holes = cercum / holes
+    global dis_sensor_holes
+    dis_sensor_holes = cercum / holes
 
 
 def read_speed(values=5, motor=0):
@@ -32,7 +34,7 @@ def read_speed(values=5, motor=0):
     measured_values = []
 
 
-    for i in range(values):
+    for i in range(values+1):
         while True:
             #time.sleep(0.001)
             # take current value
@@ -47,11 +49,10 @@ def read_speed(values=5, motor=0):
                     # time of period = timestamp from start - timestamp from end
                     end = timestp
                     duration = end-start
+                    # speed = distance / duration
+                    speed = dis_sensor_holes/duration
                     
-                    if (speed < 67):
-                        # speed = distance / duration
-                        speed = dis_sensor_holes/duration
-                        
+                    if (speed < 100):
                         # speed is appended to array
                         measured_values.append(speed)
                         break
@@ -60,12 +61,10 @@ def read_speed(values=5, motor=0):
                 start = timestp
                 
                 # a small delay to remove faulty values
-                time.sleep(0.02)
+                #time.sleep(0.02)
             elif (currentstate == 1 and prevstate == 0):
                 prevstate = 1
+                break
        
     # return the values measured
     return measured_values
-
-setup()
-print(read_speed())
