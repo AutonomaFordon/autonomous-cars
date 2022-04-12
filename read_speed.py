@@ -36,7 +36,6 @@ def read_speed(values=5, motor=0):
 
     for i in range(values+1):
         while True:
-            #time.sleep(0.001)
             # take current value
             currentstate = GPIO.input(read_speed_pins[motor])
             
@@ -61,7 +60,6 @@ def read_speed(values=5, motor=0):
                 start = timestp
                 
                 # a small delay to remove faulty values
-                #time.sleep(0.02)
             elif (currentstate == 1 and prevstate == 0):
                 prevstate = 1
                 break
