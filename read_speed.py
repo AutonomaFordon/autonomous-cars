@@ -69,4 +69,4 @@ def read_speed(values=5, motor=0):
 
 setup()
 while True:
-    print(read_speed(motor=1))
+    print(read_speed(motor=0))
