@@ -48,6 +48,12 @@ while(True):
 
     lines = cv2.HoughLinesP(masked_edges, rho, theta, threshold, np.array([]),min_line_length, max_line_gap)
 
+<<<<<<< HEAD
+=======
+#     if not lines.lengthl:
+#         print("No lines found. Exiting...")
+#         break
+>>>>>>> 1887e4e4fb48259e5951bf1ffa3be4ea8362c449
 
     
     for line in lines:
