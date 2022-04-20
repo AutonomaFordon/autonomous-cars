@@ -48,16 +48,13 @@ while(True):
 
     lines = cv2.HoughLinesP(masked_edges, rho, theta, threshold, np.array([]),min_line_length, max_line_gap)
 
-    if not lines.lengthl:
-        print("No lines found. Exiting...")
-        break
 
     
     for line in lines:
         for x1,y1,x2,y2 in line:
             cv2.line(line_image,(x1,y1),(x2,y2),(255,0,0),10)
 
-    cv2.imshow("Result", line_image)
+    cv2.imshow("Result", masked_edges)
 
     if cv2.waitKey(1) == ord('q'): #Break if q is pressed
         break
