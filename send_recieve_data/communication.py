@@ -34,7 +34,7 @@ def recieve_data(TYPE="hs_res"):
 	sock = socket.socket(socket.AF_INET, #internet
 					socket.SOCK_DGRAM) #UDP
 	print("ja")
-	sock.connect((UDP_IP["birk"], UDP_PORT))
+	sock.bind((UDP_IP["sten"], UDP_PORT))
 	
 	while True:
 		data, addr = sock.recvfrom(1024) # buffer size is 1024 byte
