@@ -1,4 +1,4 @@
-class Protocol:
+class Protocol():
 	def __init__(self, sender, reciever, typeof, ID=0):
 		try:
 			int(sender.replace(".", ""))
@@ -20,7 +20,7 @@ class Protocol:
 			print("Invalid type")
 			self.__del__()
 		
-		if(ID and type(ID)==type(int))
+		if(ID and type(ID)==type(int)):
 			self.ID = ID
 		else:
 			print("Invalid ID")
@@ -61,6 +61,7 @@ class starttime(Protocol):
 	def __del__(self):
 		super().__del__()
 
+
 class hs_req(Protocol):
 	def __init__(self, sender, reciever, nxt_action,ID=0):
 		super().__init__(sender=sender, reciever=reciever, typeof="hs_req", ID=ID)
@@ -74,6 +75,7 @@ class hs_req(Protocol):
 		
 	def __del__(self):
 		super().__del__()
+
 
 class hs_res(Protocol):
 	def __init__(self, sender, reciever, res_to, res, ID=0):
@@ -92,5 +94,79 @@ class hs_res(Protocol):
 	def __del__(self):
 		super().__del__()
 
-class req(Protocol):
-	def __init__(self, sender, reciever, 
+
+class req_info(Protocol):
+	def __init__(self, sender, reciever, info, ID=0):
+		super().__init__(sender=sender, reciever=reciever, typeof="req_info", ID=ID)
+		
+		if(type(info)==type(list)):
+			try:
+				acceptable=["pos", "dis", "pace"]
+				result=[]
+				for i in info:
+					for j in acceptable:
+						if(i == j):
+							result.append(i)
+							break
+				if(len(result)):
+					self.info=result
+				else:
+					print("No valid info requests")
+					self.__del__()
+			except:
+				print("Invalid info requested")
+				self.__del__()
+		else:
+			print("Invalid info requested")
+			self.__del__()
+
+
+class res_info(Protocol):
+	def __init__(self, sender, reciever, info, ID=0):
+		super().__init__(sender=sender, reciever=reciever, typeof="res_info", ID=ID)
+		
+		if(type(info)==type(dict)):
+			try:
+				acceptable=["pos", "dis", "pace"]
+				result={}
+				for i in info:
+					for j in acceptable:
+						if (i==j):
+							if (type(info[i])==type(str)):
+								result[i]=info[i]
+				if(len(result)):
+					self.info=result
+				else:
+					print("No valid info to respond")
+					self.__del__()
+			except:
+				print("Invalid info sent")
+				self.__del__()
+		else:
+			print("Invalid info sent")
+			self.__del__()
+
+
+myProtocol = hs_req(sender="168.0", reciever="168", nxt_action="start", ID=2)
+print(myProtocol.sender)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
