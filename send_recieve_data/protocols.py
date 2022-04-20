@@ -76,12 +76,21 @@ class hs_req(Protocol):
 		super().__del__()
 
 class hs_res(Protocol):
-	def __init__(self, sender, reciever, res,ID=0):
-		super().__init__(sender=sender, reciever=reciever, res_to, res, typeof="hs_res", ID=ID)
+	def __init__(self, sender, reciever, res_to, res, ID=0):
+		super().__init__(sender=sender, reciever=reciever, typeof="hs_res", ID=ID)
 		
 		nxt_actions = ["start", "stop"]
 		if(type(nxt_action)==type(str) and bool([a for a in nxt_actions if(a in nxt_action)])):
 			self.nxt_action=nxt_action
 		
+		if(res and type(res)==type(int))
+			self.res = res
+		else:
+			print("Invalid res")
+			self.__del__()
+		
 	def __del__(self):
 		super().__del__()
+
+class req(Protocol):
+	def __init__(self, sender, reciever, 
