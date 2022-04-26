@@ -6,7 +6,7 @@ class Protocol():
 		except:
 			print("Invalid sender")
 			return None
-		
+			
 		try:
 			int(reciever.replace(".", ""))
 			self.reciever = reciever
@@ -20,7 +20,7 @@ class Protocol():
 			print("Invalid type")
 			return None
 		
-		if(ID and type(ID)==type(1)):
+		if(type(ID)==type(1)):
 			self.ID = ID
 		else:
 			print("Invalid ID")
@@ -29,16 +29,19 @@ class Protocol():
 		print(typeof+" protocol with ID "+str(ID)+" was created | Sender "+sender+" | Reciever "+reciever)
 	
 	def get_sender(self):
-		return sender
+		return self.sender
 	
 	def get_reciever(self):
-		return reciever
+		return self.reciever
+	
+	def get_typeof(self):
+		return self.typeof
 	
 	def __del__(self):
 		try:
 			print(typeof + " protocol with ID " + str(ID) + " was deleted!")
 		except:
-			print("an protocol was deleted")
+			print("a protocol was deleted")
 
 
 class starttime(Protocol):
@@ -83,6 +86,10 @@ class hs_req(Protocol):
 		else:
 			print("Invalid nxt_action")
 			return None
+	
+	def respond(msg):
+		if(super().typeof=="establish_conn"):
+			return msg
 		
 	def __del__(self):
 		super().__del__()
@@ -153,10 +160,6 @@ class res_info(Protocol):
 			print("Invalid info sent")
 			return None
 
-
-myProtocol = hs_req(sender="168.0", reciever="168", nxt_action="start", ID=2)
-if(myProtocol==None):
-    del myProtocol
 
 
 
