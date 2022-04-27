@@ -21,3 +21,9 @@ Made X/EGL preview window
 [0:08:46.212605486] [1287] ERROR RPI raspberrypi.cpp:1792 Alternatively, try another cable and/or sensor.
 
 
+
+
+
+[0:16:57.277275983] [1637]  INFO Camera camera_manager.cpp:293 libcamera v0.0.0+3548-a11d63f9
+[0:16:57.294579915] [1638] ERROR CameraSensor camera_sensor.cpp:591 'ov5647 10-0036': Camera sensor does not support test pattern modes.
+[0:16:57.314358778] [1638]  INFO RPI raspberrypi.cpp:1352 Registered camera /base/soc/i2c0mux/i2c@1/ov5647@36 to Unicam device /dev/media0 and ISP device /dev/media1
