@@ -10,17 +10,16 @@ def socket_connect():
     global host
     global port
     global sock
-    host = "192.168.0.3"
+    host = "192.168.0.5"
     port = 5005
     sock = socket.socket()
     try:
         sock.connect((host, port))
         answer = sock.recvfrom(1024)
-        answer = bytes(answer, "utf-8")
-        hs_req(answer)
-        if (answer.get_typeof()=="establish_conn"):
-            print("hej")
-        #answer = json.loads(answer)
+        #answer = answer.decode("utf-8")
+        print(str(answer))
+        answer = json.dumps(answer)
+        answer = convert_json_protocol(answer.__dict__)
         sock.send(bytes(conf_key))
     except socket.error as msg:
         print("Error trying to connect to socket: "+str(msg))

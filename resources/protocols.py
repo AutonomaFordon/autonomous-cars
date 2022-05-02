@@ -36,6 +36,9 @@ class Protocol():
 	
 	def get_typeof(self):
 		return self.typeof
+		
+	def get_id(self):
+		return self.ID
 	
 	def __del__(self):
 		try:
@@ -161,6 +164,20 @@ class res_info(Protocol):
 			return None
 
 
+def convert_json_protocol(json):
+	typeof=json["typeof"]
+	if (typeof == "hs_req"):
+		return hs_req(sender=json["sender"],reciever=json["reciever"],ID=json["ID"],nxt_action=json["nxt_action"])
+	elif (typeof == "hs_res"):
+		return hs_res(sender=json["sender"],reciever=json["reciever"],ID=json["ID"],res_to=json["res_to"],res=json["res"])
+	elif (typeof == "req_info"):
+		return req_info(sender=json["sender"],reciever=json["reciever"],ID=json["ID"],info=json["info"])
+	elif (typeof == "res_info"):
+		return res_info(sender=json["sender"],reciever=json["reciever"],ID=json["ID"],info=json["info"])
+	elif (typeof == "starttime"):
+		return req_info(sender=json["sender"],reciever=json["reciever"],ID=json["ID"],starttime=json["sterttime"], action=json["action"])
+        
+        
 
 
 
