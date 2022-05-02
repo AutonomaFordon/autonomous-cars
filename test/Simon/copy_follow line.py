@@ -63,68 +63,28 @@ while(True):
     # convert to hsv colorspace
     hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     # lower bound and upper bound for Green color
-    lower_bound = np.array([0, 0, 230])   
-    upper_bound = np.array([255, 50, 255])
+    lower_bound = np.array([0, 70, 30])   
+    upper_bound = np.array([70, 255, 255])
     # find the colors within the boundaries
     mask = cv2.inRange(hsv, lower_bound, upper_bound)
   
-    mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, (5,5))
-    mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, (10,10))
+    #mask = cv2.morphologyEx(mask, cv2.MORPH_OPEN, (5,5))
+    #mask = cv2.morphologyEx(mask, cv2.MORPH_CLOSE, (5,5))
+    kernel = np.ones((5,5),np.uint8)
+    erosion = cv2.erode(mask,kernel,iterations = 4) 
+    edges = cv2.Canny(mask,50,100)
+    #	cv.HoughLinesP(	image, rho, theta, threshold[, lines[, minLineLength[, maxLineGap]]]	)
+    lines = cv2.HoughLinesP(edges, 1, math.pi / 180, 80, 5, 5)
     
- 
-    mask2 = np.zeros_like(mask)
-    ignore_mask_color = 255
-
-    imshape = mask.shape
-    vertices = np.array([[(0,imshape[0]),(0, 160), (640, 160), (imshape[1],imshape[0])]], dtype=np.int32)
-    cv2.fillPoly(mask2, vertices, ignore_mask_color)
-    masked_edges = cv2.bitwise_and(mask, mask2)
-    
-    #cv2.imshow("Mask", masked_edges)
-    edges = cv2.Canny(img,100,200)
-    cv2.imshow("Img", edges)
-    
-    rho = 2 # distance resolution in pixels of the Hough grid
-    theta = np.pi/180 # angular resolution in radians of the Hough grid
-    threshold = 40    # minimum number of votes (intersections in Hough grid cell)
-    min_line_length = 20 #minimum number of pixels making up a line
-    max_line_gap = 15   # maximum gap in pixels between connectable line segments
-    line_image = np.copy(edges)*0 # creating a blank to draw lines on
-    lines_acc_ang = 0
-    
-    lines = cv2.HoughLinesP(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY), rho, theta, threshold, np.array([]),min_line_length, max_line_gap)
-
-    if lines is not None:
-        for i in range(0, len(lines)):
-            x1, y1, x2, y2 = lines[i][0]
-            if (abs(y2-y1) > 20): 
-                cv2.line(line_image, (x1, y1), (x2, y2), (255,255,0), 3, 2)
-                #Get line ang
-                ang = abs(x1-x2) / (y1-y2)
-                #print(ang)
-                if (abs(ang) < 2): 
-                    lines_acc_ang += ang*2
-                
-    print(lines_acc_ang)
-    cv2.imshow("Img", edges)
-    cv2.imshow("GRAY", cv2.cvtColor(img, cv2.COLOR_BGR2GRAY))
-    cv2.imshow("Lines", line_image)
-    
-
-    pace_r = 50
-    pace_l = 50
-    direction = lines_acc_ang*1
-    if (direction>50): direction = 50;
-    if (direction<-50): direction = -50;
-    print(direction)
-    
-    pace_l += direction
-    pace_r -= direction
-    
-    #pwml.ChangeDutyCycle(pace_l)
-    GPIO.output(motorl[1], False)
-    #pwmr.ChangeDutyCycle(pace_r)
-    GPIO.output(motorr[1], False)
+    cv2.imshow("Img", img)
+    cv2.imshow("Mask", mask)
+    cv2.imshow("edges", edges)
+    cv2.imshow("Lines", lines) #FEL!
+#     
+#     #pwml.ChangeDutyCycle(pace_l)
+#     GPIO.output(motorl[1], False)
+#     #pwmr.ChangeDutyCycle(pace_r)
+#     GPIO.output(motorr[1], False)
 
     if cv2.waitKey(1) == ord('q'): #Break if q is pressed
         break
