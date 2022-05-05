@@ -10,7 +10,7 @@ def socket_connect():
     global host
     global port
     global sock
-    host = "192.168.0.5"
+    host = "192.168.0.3"
     port = 5005
     sock = socket.socket()
     try:
