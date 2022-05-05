@@ -97,3 +97,26 @@ def stackImages(scale,imgArray):
         hor= np.hstack(imgArray)
         ver = hor
     return ver
+
+def detect_lane_area(img):
+    
+    height, width = img.shape
+    driveable_area = np.zeros(img.shape, np.uint8)
+    
+    for row in range(0, height):
+        for pixel_l in reversed(range(int(width/2))):
+            if img[row][pixel_l] == 0:
+                driveable_area[row][pixel_l] = 255
+            else:
+                break
+        
+        for pixel_r in range(int(width/2), width-1):
+            if img[row][pixel_r] == 0:
+                driveable_area[row][pixel_r] = 255
+            else:
+                break
+    
+    return driveable_area
+
+
+

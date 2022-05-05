@@ -36,22 +36,15 @@ def getLaneCurve(img,display=2):
     imgWarpPoints = utlis.drawPoints(imgCopy,points)
     
     #### STEP 2.5
+    countours = np.copy(imgWarp)
+    countours = cv2.erode(countours,(5,5),iterations = 3)
     
-    ret,thresh1 = cv2.threshold(imgWarp,127,255,cv2.THRESH_BINARY)
-    
-    print(thresh1)
-    cv2.imshow('test',thresh1)
-    thresh2 = cv2.morphologyEx(thresh1, cv2.MORPH_OPEN, (15,15))
-    
-    #countours = np.copy(imgWarp)
-    
-    cv2.imshow('hm',thresh2)
-    
+    driveable_area = utlis.detect_lane_area(countours)
     
      
     #### STEP 3
-    middlePoint,imgHist = utlis.getHistogram(imgWarp,display=True,minPer=0.5,region=4)
-    curveAveragePoint, imgHist = utlis.getHistogram(imgWarp, display=True, minPer=0.9)
+    middlePoint,imgHist = utlis.getHistogram(driveable_area,display=True,minPer=0.5,region=4)
+    curveAveragePoint, imgHist = utlis.getHistogram(driveable_area, display=True, minPer=0.9)
     curveRaw = curveAveragePoint - middlePoint
  
     #### SETP 4
@@ -62,7 +55,7 @@ def getLaneCurve(img,display=2):
  
     #### STEP 5
     if display != 0:
-        imgInvWarp = utlis.warpImg(imgWarp, points, wT, hT, inv=True)
+        imgInvWarp = utlis.warpImg(driveable_area, points, wT, hT, inv=True)
         imgInvWarp = cv2.cvtColor(imgInvWarp, cv2.COLOR_GRAY2BGR)
         imgInvWarp[0:hT // 3, 0:wT] = 0, 0, 0
         imgLaneColor = np.zeros_like(img)
@@ -80,7 +73,7 @@ def getLaneCurve(img,display=2):
         #fps = cv2.getTickFrequency() / (cv2.getTickCount() - timer);
         #cv2.putText(imgResult, 'FPS ' + str(int(fps)), (20, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (230, 50, 50), 3);
     if display == 2:
-        imgStacked = utlis.stackImages(0.7, ([img, imgWarpPoints, imgWarp],
+        imgStacked = utlis.stackImages(0.7, ([img, imgWarpPoints, driveable_area],
                                              [imgHist, imgLaneColor, imgResult]))
         cv2.imshow('ImageStack', imgStacked)
     elif display == 1:
@@ -94,12 +87,12 @@ def getLaneCurve(img,display=2):
     return curve
  
  
-if __name__ == '__main__':
+def steering_dir():
     cap = cv2.VideoCapture('vid1.mp4')
-    intialTrackBarVals = [70, 70, 0, 240 ]
+    intialTrackBarVals = [12, 70, 0, 240 ]
     utlis.initializeTrackbars(intialTrackBarVals)
     frameCounter = 0
-    while True:
+    while frameCounter == 0:
         frameCounter += 1
 
         image = next(stream) #Grab new frames
@@ -109,3 +102,4 @@ if __name__ == '__main__':
         print(curve)
         #cv2.imshow('Vid',img)
         cv2.waitKey(1)
+        return curve
