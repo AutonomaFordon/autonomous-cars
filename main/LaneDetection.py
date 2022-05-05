@@ -37,64 +37,17 @@ def getLaneCurve(img,display=2):
     
     #### STEP 2.5
     
-    height,width,channel = img.shape
+    ret,thresh1 = cv2.threshold(imgWarp,127,255,cv2.THRESH_BINARY)
     
-    contours, hierarchy = cv2.findContours(imgWarp, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE) 
-
-    contour_area = []
-
-    for c in contours:
-
-        print('area:', cv2.contourArea(c))
-
-        contour_area.append((cv2.contourArea(c), c))
-
-    print('--- contour_area ---')
-
-    for item in contour_area:
-
-        print('contour_area:', item[0])
-
-        
-
-    # sort list with `(area, contour)` using only `area`    
-
-    contour_area = sorted(contour_area, key=lambda x:x[0], reverse=True)
-
-    print('--- contour_area - sorted ---')
-
-    for item in contour_area:
-
-        print('contour_area:', item[0])
-
-        
-
-    # get two the biggest contours    
-
-    print('--- two the biggest contours ---')    
-
-    print('p0:', contour_area[0][0])
-
-    print('p1:', contour_area[1][0])
-
-    image2 = np.zeros((height, width, 3), dtype = "uint8")
-
-    # draw them
-
-    coords1 = np.vstack([contour_area[0][1], contour_area[1][1]])
-
-    cv2.fillPoly(image2, [coords1], (255, 255, 255))
-
-    gray = cv2.cvtColor(image2, cv2.COLOR_BGR2GRAY) 
-
-    thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)[1]
-
-    coords = np.column_stack(np.where(thresh > 0))
-
-    c2=np.stack((coords[:,1], coords[:,0]), axis=-1)
-
-    cv2.fillPoly(imgWarp, [c2], (255, 255, 255))
-        
+    print(thresh1)
+    cv2.imshow('test',thresh1)
+    thresh2 = cv2.morphologyEx(thresh1, cv2.MORPH_OPEN, (15,15))
+    
+    #countours = np.copy(imgWarp)
+    
+    cv2.imshow('hm',thresh2)
+    
+    
      
     #### STEP 3
     middlePoint,imgHist = utlis.getHistogram(imgWarp,display=True,minPer=0.5,region=4)

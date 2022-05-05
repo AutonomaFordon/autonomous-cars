@@ -62,7 +62,7 @@ while(True):
     edges = cv2.Canny(img,100,200)
     edges = cv2.morphologyEx(edges, cv2.MORPH_CLOSE, (5,5))
     
-    cv2.imshow("Img", img)
+    cv2.imshow("Img", edges)
 
 
 
