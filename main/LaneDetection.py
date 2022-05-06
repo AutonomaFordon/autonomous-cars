@@ -4,6 +4,25 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 
+import RPi.GPIO as GPIO
+#pins used for motors, first uses pwm, second does not
+motorl = [13, 5] #left motor pins
+motorr = [12, 6] #right motor pins
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setwarnings(False)
+
+#Set all motor pins as output
+GPIO.setup(motorl[0], GPIO.OUT)
+GPIO.setup(motorl[1], GPIO.OUT)
+GPIO.setup(motorr[0], GPIO.OUT)
+GPIO.setup(motorr[1], GPIO.OUT)
+
+GPIO.output(motorl[0], False)
+GPIO.output(motorl[1], False)
+GPIO.output(motorr[0], False)
+GPIO.output(motorr[1], False)
+
 import utlis
  
 curveList = []
@@ -92,7 +111,7 @@ def steering_dir():
     intialTrackBarVals = [12, 70, 0, 240 ]
     utlis.initializeTrackbars(intialTrackBarVals)
     frameCounter = 0
-    while frameCounter == 0:
+    while True:
         frameCounter += 1
 
         image = next(stream) #Grab new frames
@@ -102,4 +121,19 @@ def steering_dir():
         print(curve)
         #cv2.imshow('Vid',img)
         cv2.waitKey(1)
-        return curve
+        #return curve
+
+        if(curve>0):
+            GPIO.output(motorl[0], True)
+            GPIO.output(motorl[1], False)
+            GPIO.output(motorr[0], False)
+            GPIO.output(motorr[1], False)
+            
+        if(curve<0):
+            GPIO.output(motorl[0], False)
+            GPIO.output(motorl[1], False)
+            GPIO.output(motorr[0], True)
+            GPIO.output(motorr[1], False)
+        
+while True:
+    steering_dir()
