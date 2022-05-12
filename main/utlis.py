@@ -107,18 +107,21 @@ def detect_lane_area(img):
     
     for row in range(0, height, 20):
         pixel_l = int(width/2)
-        while img[row][pixel_l] == 0 and pixel_l != -1:
+        while img[row][pixel_l] == 0 and pixel_l != 0:
             pixel_l -= 1
         #Add coordinate
-        np.append(points, [row, pixel_l])
+        #points = np.append(points, [row, pixel_l])
+        points.append([pixel_l, row])
         
-        pixel_r = 0
+        pixel_r = int(width/2)
         while img[row][pixel_r] == 0 and pixel_r != width-1:
-            pixel_l += 1
-        #Add coordinate
-        np.append(points, [row, pixel_r])
-        
-    cv2.fillPoly(driveable_area, pts=[points], color=(255))
+            pixel_r += 1
+        #Add c
+        #points = np.append(arr=points, values=[row, pixel_r])
+        points.insert(0,[pixel_r, row])
+    
+    points2 = np.copy(points)
+    cv2.fillPoly(driveable_area, [points2], color=(255))
     return driveable_area
 
 

@@ -59,7 +59,6 @@ def getLaneCurve(img,display=2):
     countours = cv2.erode(countours,(5,5),iterations = 3)
     
     driveable_area = utlis.detect_lane_area(countours)
-    
      
     #### STEP 3
     middlePoint,imgHist = utlis.getHistogram(driveable_area,display=True,minPer=0.5,region=4)
@@ -113,7 +112,7 @@ def steering_dir():
     frameCounter = 0
     while True:
         frameCounter += 1
-
+        
         image = next(stream) #Grab new frames
         img = image.array #Convert to array for processing in opencv
         rawCapture.truncate(0) #Clear streem buffer 
@@ -122,7 +121,7 @@ def steering_dir():
         #cv2.imshow('Vid',img)
         cv2.waitKey(1)
         #return curve
-
+        
         if(curve>0):
             GPIO.output(motorl[0], True)
             GPIO.output(motorl[1], False)
