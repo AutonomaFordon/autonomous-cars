@@ -16,11 +16,10 @@ def socket_connect():
     try:
         sock.connect((host, port))
         answer = sock.recvfrom(1024)
-        answer = bytes(answer, "utf-8")
-        hs_req(answer)
-        if (answer.get_typeof()=="establish_conn"):
-            print("hej")
-        #answer = json.loads(answer)
+        #answer = answer.decode("utf-8")
+        print(str(answer))
+        answer = json.dumps(answer)
+        answer = convert_json_protocol(answer.__dict__)
         sock.send(bytes(conf_key))
     except socket.error as msg:
         print("Error trying to connect to socket: "+str(msg))

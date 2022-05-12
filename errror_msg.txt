@@ -1,0 +1,29 @@
+libcamera-hello
+Made X/EGL preview window
+[0:08:44.512976289] [1286]  INFO Camera camera_manager.cpp:293 libcamera v0.0.0+3548-a11d63f9
+[0:08:44.534460364] [1287] ERROR CameraSensor camera_sensor.cpp:591 'ov5647 10-0036': Camera sensor does not support test pattern modes.
+[0:08:44.570393171] [1287]  INFO RPI raspberrypi.cpp:1352 Registered camera /base/soc/i2c0mux/i2c@1/ov5647@36 to Unicam device /dev/media0 and ISP device /dev/media1
+[0:08:44.571506359] [1286]  INFO Camera camera.cpp:1029 configuring streams: (0) 1296x972-YUV420
+[0:08:44.572178668] [1287]  INFO RPI raspberrypi.cpp:760 Sensor: /base/soc/i2c0mux/i2c@1/ov5647@36 - Selected sensor format: 1296x972-SGBRG10_1X10 - Selected unicam format: 1296x972-pGAA
+[0:08:44.591199365] [1291]  INFO IPARPI raspberrypi.cpp:635 Request ctrl: Saturation = 1.000000
+[0:08:44.591500740] [1291]  INFO IPARPI raspberrypi.cpp:635 Request ctrl: Contrast = 1.000000
+[0:08:44.591718690] [1291]  INFO IPARPI raspberrypi.cpp:635 Request ctrl: Brightness = 0.000000
+[0:08:44.591908239] [1291]  INFO IPARPI raspberrypi.cpp:635 Request ctrl: AwbMode = 0
+[0:08:44.592089216] [1291]  INFO IPARPI raspberrypi.cpp:635 Request ctrl: Sharpness = 1.000000
+[0:08:44.592309443] [1291]  INFO IPARPI raspberrypi.cpp:635 Request ctrl: ExposureValue = 0.000000
+[0:08:44.592499788] [1291]  INFO IPARPI raspberrypi.cpp:635 Request ctrl: AeExposureMode = 0
+[0:08:44.592671323] [1291]  INFO IPARPI raspberrypi.cpp:635 Request ctrl: FrameDurationLimits = [ 33333, 33333 ]
+[0:08:44.592851633] [1291]  INFO IPARPI raspberrypi.cpp:635 Request ctrl: AeMeteringMode = 0
+[0:08:44.593025593] [1291]  INFO IPARPI raspberrypi.cpp:635 Request ctrl: NoiseReductionMode = 3
+[0:08:46.212376703] [1287]  WARN V4L2 v4l2_videodevice.cpp:1930 /dev/video0[16:cap]: Dequeue timer of 1520000.00us has expired!
+[0:08:46.212509877] [1287] ERROR RPI raspberrypi.cpp:1790 Unicam has timed out!
+[0:08:46.212558811] [1287] ERROR RPI raspberrypi.cpp:1791 Please check that your camera sensor connector is attached securely.
+[0:08:46.212605486] [1287] ERROR RPI raspberrypi.cpp:1792 Alternatively, try another cable and/or sensor.
+
+
+
+
+
+[0:16:57.277275983] [1637]  INFO Camera camera_manager.cpp:293 libcamera v0.0.0+3548-a11d63f9
+[0:16:57.294579915] [1638] ERROR CameraSensor camera_sensor.cpp:591 'ov5647 10-0036': Camera sensor does not support test pattern modes.
+[0:16:57.314358778] [1638]  INFO RPI raspberrypi.cpp:1352 Registered camera /base/soc/i2c0mux/i2c@1/ov5647@36 to Unicam device /dev/media0 and ISP device /dev/media1

@@ -36,6 +36,9 @@ class Protocol():
 	
 	def get_typeof(self):
 		return self.typeof
+		
+	def get_id(self):
+		return self.ID
 	
 	def __del__(self):
 		try:
@@ -161,13 +164,63 @@ class res_info(Protocol):
 			return None
 
 
+def convert_json_protocol(json):
+	typeof=json["typeof"]
+	if (typeof == "hs_req"):
+		return hs_req(sender=json["sender"],reciever=json["reciever"],ID=json["ID"],nxt_action=json["nxt_action"])
+	elif (typeof == "hs_res"):
+		return hs_res(sender=json["sender"],reciever=json["reciever"],ID=json["ID"],res_to=json["res_to"],res=json["res"])
+	elif (typeof == "req_info"):
+		return req_info(sender=json["sender"],reciever=json["reciever"],ID=json["ID"],info=json["info"])
+	elif (typeof == "res_info"):
+		return res_info(sender=json["sender"],reciever=json["reciever"],ID=json["ID"],info=json["info"])
+	elif (typeof == "starttime"):
+		return req_info(sender=json["sender"],reciever=json["reciever"],ID=json["ID"],starttime=json["sterttime"], action=json["action"])
 
 
-
-
-
-
-
+class Protocol():
+    def __init__(self, sender):
+        self.sender = sender
+        self.id_count = 0
+        self.sent = {}
+        self.recieved = {}
+        
+    def mkptc(self, ID=self.id_count, sender=self.sender, reciever, typeof, data=""):
+        msg = str(ID)
+        msg += "|"
+        msg += sender
+        msg += "|"
+        msg += rec
+        msg += "|"
+        
+        if (typeof=="req_pos" or typeof=="hs_req"):
+            msg += typeof
+        elif (typeof=="send_pos" or typeof=="hs_res"):
+            msg += typeof
+            msg += "|"
+            msg += data
+        else:
+            print("requested protocol does not exist")
+            return 0
+        
+        if (sender == self.sender):
+            self.sent[self.id_count] = msg
+            self.id_count += 1
+        else:
+            self.recieved[sender+=("|"+ID)]
+        
+        return msg
+        
+    def interpret(self, msg):
+        splitted = msg.split("|")
+        ID = splitted[0]
+        sender = splitted[1]
+        reciever = splitted[2]
+        typeof = splitted[3]
+        if (len(splitted) == 5):
+            data = splitted[4]
+            return mkptc(ID, sender, reciever, typeof, data)
+        return mkptc(ID, sender, reciever, typeof)
 
 
 

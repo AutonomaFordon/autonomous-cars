@@ -59,8 +59,11 @@ def socket_accept():
 
 def send_respond(conn, protocol, exp_res):
     try:
-        json_protocol = json.dumps(protocol)
-        conn.sendall(bytes(protocol, "utf-8"))
+        print(protocol)
+        json_protocol = json.dumps(str(protocol))
+        print(json_protocol)
+        conn.sendall(bytes(json_protocol, "utf-8"))
+        print("done")
         if(exp_res):
             respond = conn.recv(1024)
             return respond
