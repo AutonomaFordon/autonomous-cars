@@ -179,13 +179,18 @@ def convert_json_protocol(json):
 
 
 class Protocol():
-    def __init__(self, sender):
+    def __init__(self, sender="unknown"):
         self.sender = sender
         self.id_count = 0
         self.sent = {}
         self.recieved = {}
         
-    def mkptc(self, ID=self.id_count, sender=self.sender, reciever, typeof, data=""):
+    def mkptc(self, ID=-1, sender="", rec="", typeof="", data=""):
+
+		if (ID==-1): ID = self.id_count
+
+		if (sender==""): sender==self.sender
+		
         msg = str(ID)
         msg += "|"
         msg += sender
@@ -207,7 +212,7 @@ class Protocol():
             self.sent[self.id_count] = msg
             self.id_count += 1
         else:
-            self.recieved[sender+=("|"+ID)]
+            self.recieved[sender+"|"+ID] = msg
         
         return msg
         
@@ -221,6 +226,10 @@ class Protocol():
             data = splitted[4]
             return mkptc(ID, sender, reciever, typeof, data)
         return mkptc(ID, sender, reciever, typeof)
+
+myProtocol = Protocol("127.168.0.5")
+print(myProtocol.mkptc(rec="127.168.0.2", typeof="req_pos"))
+
 
 
 
