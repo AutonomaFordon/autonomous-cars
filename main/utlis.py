@@ -3,7 +3,7 @@ import numpy as np
  
 def thresholding(img):
     imgHsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
-    lowerWhite = np.array([0,70,70])
+    lowerWhite = np.array([0,40,70])
     upperWhite = np.array([50,255,255])
     maskWhite = cv2.inRange(imgHsv,lowerWhite,upperWhite)
     return maskWhite
@@ -21,7 +21,7 @@ def warpImg(img,points,w,h,inv = False):
 def nothing(a):
     pass
  
-def initializeTrackbars(intialTracbarVals,wT=480, hT=240):
+def initializeTrackbars(intialTracbarVals,wT=120, hT=60):
     cv2.namedWindow("Trackbars")
     cv2.resizeWindow("Trackbars", 600, 400)
     cv2.createTrackbar("Width Top", "Trackbars", intialTracbarVals[0],wT//2, nothing)
@@ -29,7 +29,7 @@ def initializeTrackbars(intialTracbarVals,wT=480, hT=240):
     cv2.createTrackbar("Width Bottom", "Trackbars", intialTracbarVals[2],wT//2, nothing)
     cv2.createTrackbar("Height Bottom", "Trackbars", intialTracbarVals[3], hT, nothing)
  
-def valTrackbars(wT=480, hT=240):
+def valTrackbars(wT=120, hT=60):
     widthTop = cv2.getTrackbarPos("Width Top", "Trackbars")
     heightTop = cv2.getTrackbarPos("Height Top", "Trackbars")
     widthBottom = cv2.getTrackbarPos("Width Bottom", "Trackbars")
@@ -100,12 +100,14 @@ def stackImages(scale,imgArray):
 
 def detect_lane_area(img):
     
+    #cv2.imshow("Test:", img)
+    
     height, width = img.shape
     driveable_area = np.zeros(img.shape, np.uint8)
     
     points = []
     
-    for row in range(0, height, 20):
+    for row in range(0, height, 10):
         pixel_l = int(width/2)
         while img[row][pixel_l] == 0 and pixel_l != 0:
             pixel_l -= 1

@@ -30,15 +30,15 @@ avgVal=10
 
 #Setup camera
 camera = PiCamera()
-camera.resolution = (480, 240) #Set resolution
+camera.resolution = (120, 60) #Set resolution
 camera.framerate = 32 #Set framerate
-rawCapture = PiRGBArray(camera, size=(480, 240))
+rawCapture = PiRGBArray(camera, size=(120, 60))
  
 #Give camera time to warmup
 time.sleep(1)
 
 # Setup streem
-stream = camera.capture_continuous(rawCapture, format="bgr", use_video_port=True, resize=(480, 240))
+stream = camera.capture_continuous(rawCapture, format="bgr", use_video_port=True, resize=(120, 60))
  
  
 def getLaneCurve(img,display=2):
@@ -56,7 +56,7 @@ def getLaneCurve(img,display=2):
     
     #### STEP 2.5
     countours = np.copy(imgWarp)
-    countours = cv2.erode(countours,(5,5),iterations = 3)
+    countours = cv2.erode(countours,(3,3),iterations = 1)
     
     driveable_area = utlis.detect_lane_area(countours)
      
@@ -107,7 +107,7 @@ def getLaneCurve(img,display=2):
  
 def steering_dir():
     cap = cv2.VideoCapture('vid1.mp4')
-    intialTrackBarVals = [12, 70, 0, 240 ]
+    intialTrackBarVals = [3, 18, 0, 60 ]
     utlis.initializeTrackbars(intialTrackBarVals)
     frameCounter = 0
     while True:
@@ -118,7 +118,7 @@ def steering_dir():
         rawCapture.truncate(0) #Clear streem buffer 
         curve = getLaneCurve(img,display=2)
         print(curve)
-        #cv2.imshow('Vid',img)
+        #cv2.imshow('Vid',img)l
         cv2.waitKey(1)
         #return curve
         
