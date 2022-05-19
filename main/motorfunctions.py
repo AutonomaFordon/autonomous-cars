@@ -59,6 +59,7 @@ def drive(pl=1, pr=1):
 
 def calibrate(read_speed_pins=[20,16]):
     print("calibrating")
+    max_time=2
     global fl_num
     global fr_num
     fl_num = 15
@@ -66,19 +67,39 @@ def calibrate(read_speed_pins=[20,16]):
     lspeed = [0,0,0]
     rspeed = [0,0,0]
     speed.setup(rsp=read_speed_pins)
-    while(rspeed[2]<1.5):
-        fr_num += 3
-        pwmr.ChangeDutyCycle(fr_num)
-        GPIO.output(motorr[1], False)
-        rspeed = speed.read_speed(values=3,motor=1,time_lim=2)
-        print(rspeed)
-    pwmr.ChangeDutyCycle(0)
-    while(lspeed[2]<1.5):
-        fl_num += 3
-        pwml.ChangeDutyCycle(fl_num)
-        GPIO.output(motorl[1], False)
-        lspeed = speed.read_speed(values=3,motor=0,time_lim=2)
-        print(lspeed)
+    
+    for i in [8, 2]:
+        while(lspeed[2]<3):
+            fl_num += i
+            pwml.ChangeDutyCycle(fl_num)
+            GPIO.output(motorl[1], False)
+            lspeed = speed.read_speed(values=3,motor=0,time_lim=max_time)
+            print("Left: +"+str(i)+"\nPWM: "+str(fl_num)+"\nSpeed: "+str(lspeed))
+            
+        while(lspeed[2]>3):
+            fl_num -= i/2
+            pwml.ChangeDutyCycle(fl_num)
+            GPIO.output(motorl[1], False)
+            lspeed = speed.read_speed(values=3,motor=0,time_lim=max_time)
+            print("Left: -"+str(i/2)+"\nPWM: "+str(fl_num)+"\nSpeed: "+str(lspeed))
+            
     pwml.ChangeDutyCycle(0)
+    
+    for i in [8, 2]:
+        while(rspeed[2]<3):
+            fr_num += i
+            pwmr.ChangeDutyCycle(fr_num)
+            GPIO.output(motorr[1], False)
+            rspeed = speed.read_speed(values=3,motor=1,time_lim=max_time)
+            print("Right: +"+str(i)+"\nPWM: "+str(fr_num)+"\nSpeed: "+str(rspeed))
+            
+        while(rspeed[2]>3):
+            fr_num -= i/2
+            pwmr.ChangeDutyCycle(fr_num)
+            GPIO.output(motorr[1], False)
+            rspeed = speed.read_speed(values=3,motor=1,time_lim=max_time)
+            print("Right: -"+str(i/2)+"\nPWM: "+str(fr_num)+"\nSpeed: "+str(rspeed))
+            
+    pwmr.ChangeDutyCycle(0)
 
 setup()

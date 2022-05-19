@@ -9,6 +9,7 @@ import cv2
 global stream
 global rawCapture
 
+<<<<<<< HEAD
 
 def setup():
     global stream
@@ -55,3 +56,8 @@ while True:
         motor.drive(pl=2 ,pr=0)
     
     print(curve)
+=======
+motor.drive(2, 2)
+
+input()
+>>>>>>> d712710bd60a647d763184b74d5765182a6355c7
