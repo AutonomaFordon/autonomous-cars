@@ -38,14 +38,9 @@ def read_speed(values=5, motor=0, time_lim=2000):
         while True:
             #print(time.time())
             if (time.time() - timestp > time_lim):
-                print("hej")
-                print(len(measured_values))
                 if (len(measured_values)<values):
-                    print("hejsan")
                     for j in range(values-len(measured_values)):
-                        print(j)
                         measured_values.append(0)
-                        print("hejhopp")
                 return measured_values
             # take current value
             currentstate = GPIO.input(read_speed_pins[motor])
