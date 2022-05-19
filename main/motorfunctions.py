@@ -41,47 +41,44 @@ def setup(pins = [[13,5],[12,6]]):
     fr_num = 50
     fl_num = 50
 
-def drive(motor=2, pace=1):
-    #0 -> left motor, 1 -> right, 2 -> both
-    if(pace):
-        pacel = fl_num + (100-fl_num)*(pace-1)/5
-        pacer = fr_num + (100-fr_num)*(pace-1)/5
+def drive(pl=1, pr=1):
+    if(pl):
+        pacel = fl_num + (100-fl_num)*(pl-1)/5.0
     else:
-        return 0
-    if (motor == 2):
-        pwml.ChangeDutyCycle(pacel)
-        pwmr.ChangeDutyCycle(pacer)
-        GPIO.output(motorr[1], False)
-        GPIO.output(motorl[1], False)
-    elif (motor == 0):
-        pwml.ChangeDutyCycle(pacel)
-        GPIO.output(motorl[1], False)
-    elif (motor == 1):
-        pwmr.ChangeDutyCycle(pacer)
-        GPIO.output(motorr[1], False)
+        pacel = 0
+    if(pr):
+        pacer = fr_num + (100-fr_num)*(pr-1)/5.0
+    else:
+        pacer = 0
+    
+    pwml.ChangeDutyCycle(pacel)
+    pwmr.ChangeDutyCycle(pacer)
+    GPIO.output(motorr[1], False)
+    GPIO.output(motorl[1], False)
     return 1
 
 def calibrate(read_speed_pins=[20,16]):
     print("calibrating")
-    fl_num = 40
-    fr_num = 20
+    global fl_num
+    global fr_num
+    fl_num = 15
+    fr_num = 15
     lspeed = [0,0,0]
     rspeed = [0,0,0]
     speed.setup(rsp=read_speed_pins)
-    while(rspeed[2]<0.5):
+    while(rspeed[2]<1.5):
+        fr_num += 3
         pwmr.ChangeDutyCycle(fr_num)
         GPIO.output(motorr[1], False)
-        rspeed = speed.read_speed(values=3,motor=1,time_lim=4)
-        fr_num += 4
+        rspeed = speed.read_speed(values=3,motor=1,time_lim=2)
         print(rspeed)
-    while(lspeed[2]<0.5):
+    pwmr.ChangeDutyCycle(0)
+    while(lspeed[2]<1.5):
+        fl_num += 3
         pwml.ChangeDutyCycle(fl_num)
         GPIO.output(motorl[1], False)
-        lspeed = speed.read_speed(values=3,motor=0,time_lim=2000)
-        fl_num += 8
+        lspeed = speed.read_speed(values=3,motor=0,time_lim=2)
         print(lspeed)
+    pwml.ChangeDutyCycle(0)
 
 setup()
-calibrate()
-print(fl_num)
-print(fr_num)
