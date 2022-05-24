@@ -36,12 +36,30 @@ def setup(pins = [[13,5],[12,6]]):
     GPIO.output(motorr[1], False)
     
     #Establishing uncalibrated speed variables
+    global fr_min
+    global fl_min
+    fr_min = 75
+    fl_min = 75
     global fr_num
     global fl_num
-    fr_num = 50
-    fl_num = 50
+    fr_num = 40
+    fl_num = 40
 
 def drive(pl=1, pr=1):
+    global fl_start
+    global fr_start
+    global fl_num
+    global fr_num
+    ls=speed.read_speed(values=3,motor=0,time_lim=2)[2]
+    rs=speed.read_speed(values=3,motor=1,time_lim=2)[2]
+    if (ls):
+        pwml.ChangeDutyCycle(fl_start)
+        GPIO.output(motorl[1], False)
+    if (rs):
+        pwmr.ChangeDutyCycle(fr_start)
+        GPIO.output(motorr[1], False)
+    if (ls or rs):
+        time.sleep(0.05)
     if(pl):
         pacel = fl_num + (100-fl_num)*(pl-1)/5.0
     else:
@@ -50,11 +68,8 @@ def drive(pl=1, pr=1):
         pacer = fr_num + (100-fr_num)*(pr-1)/5.0
     else:
         pacer = 0
-    
     pwml.ChangeDutyCycle(pacel)
     pwmr.ChangeDutyCycle(pacer)
-    GPIO.output(motorr[1], False)
-    GPIO.output(motorl[1], False)
     return 1
 
 def calibrate(read_speed_pins=[20,16]):
@@ -71,6 +86,9 @@ def calibrate(read_speed_pins=[20,16]):
     for i in [8, 2]:
         while(lspeed[2]<2):
             fl_num += i
+            if (fl_num > 100.0):
+                print("Something went wrong re-calibrating...")
+                return calibrate()
             pwml.ChangeDutyCycle(fl_num)
             GPIO.output(motorl[1], False)
             lspeed = speed.read_speed(values=3,motor=0,time_lim=max_time)
@@ -95,6 +113,9 @@ def calibrate(read_speed_pins=[20,16]):
     for i in [8, 2]:
         while(rspeed[2]<2):
             fr_num += i
+            if (fr_num > 100.0):
+                print("Something went wrong re-calibrating...")
+                return calibrate()
             pwmr.ChangeDutyCycle(fr_num)
             GPIO.output(motorr[1], False)
             rspeed = speed.read_speed(values=3,motor=1,time_lim=max_time)

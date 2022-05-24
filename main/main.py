@@ -11,7 +11,10 @@ from threading import Thread
 global stream
 global rawCapture
 
+<<<<<<< HEAD
+=======
 
+>>>>>>> 1f0452d4526c8e513d26dc4de3ff1ac3a2c8b618
 def setup():
     global stream
     global rawCapture
