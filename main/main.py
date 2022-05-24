@@ -1,9 +1,11 @@
-import motorfunctions as motor
+#M import motorfunctions as motor
+import motorFunctionsParallell as motors
 import LaneDetection
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 import time
 import cv2
+from threading import Thread
 
 #lobal vars
 global stream
@@ -15,8 +17,13 @@ def setup():
     global rawCapture
     
     #Setup motors
-    motor.calibrate()
-
+    t1 = Thread(target=motors.trackSpeed)
+    t1.start()
+    #M motor.calibrate()
+    
+    while(True):
+        motors.setSpeed(20,20)
+    
     #Setup Camera
     camera = PiCamera()
     camera.resolution = (120, 60) #Set resolution
@@ -34,6 +41,7 @@ def get_frame():
     return img
 
 setup()
+
 while True:
     #Get image
     img = get_frame()
