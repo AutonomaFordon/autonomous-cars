@@ -2,13 +2,14 @@ import cv2
 import numpy as np
  
 def thresholding(img):
-    imgHsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV)
-    lowerWhite = np.array([0,40,70])
-    upperWhite = np.array([50,255,255])
-    maskWhite = cv2.inRange(imgHsv,lowerWhite,upperWhite)
+    imgHsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) # converts image values to HSV
+    lowerWhite = np.array([0,40,70]) #lower bound
+    upperWhite = np.array([50,255,255]) #higher bound
+    maskWhite = cv2.inRange(imgHsv,lowerWhite,upperWhite) #if x camerapixel is within the lower and higher bound, x pixel will be white, 
+    #if not, x pixel will be black
     return maskWhite
  
-def warpImg(img,points,w,h,inv = False):
+def warpImg(img,points,w,h,inv = False): 
     pts1 = np.float32(points)
     pts2 = np.float32([[0,0],[w,0],[0,h],[w,h]])
     if inv:
