@@ -1,37 +1,38 @@
-import cv2
-import numpy as np
+import cv2 #Open CV
+import numpy as np #Numpy
 
 import time
 
-
-import utlis
+import utlis #Supporting functions
  
-curveList = []
+#Global vars 
+curveList = [] #List of latest curve values
 avgVal=10
+
+def getLaneCurve(img,display=2): #Takes an image as input and calculates the curve (direction of the lane)
+                                 #img is the input image and display determines if we should viualize the substeps (set to 0 to disable and 1 to enable)
  
- 
-def getLaneCurve(img,display=2):
- 
-    imgCopy = img.copy()
-    imgResult = img.copy()
-    #### STEP 1
+    imgCopy = img.copy() #Create copy of img
+    imgResult = img.copy() #Create second copy of img
+    
+    #Convert image to binary, so that everyhing is black except of the road markings
     imgThres = utlis.thresholding(img)
  
-    #### STEP 2
-    hT, wT, c = img.shape
-    points = utlis.valTrackbars()
-    imgWarp = utlis.warpImg(imgThres,points,wT,hT)
-    imgWarpPoints = utlis.drawPoints(imgCopy,points)
+    #Warap the image so it resembles what it would look like from above
+    hT, wT, c = img.shape #Extract img hight width and channels to variables
+    points = utlis.valTrackbars() #Grab reference points to warp image
+    imgWarp = utlis.warpImg(imgThres,points,wT,hT) #Preform the warp
+    imgWarpPoints = utlis.drawPoints(imgCopy,points) #Visualize the reference points
     
-    #### STEP 2.5
-    countours = np.copy(imgWarp)
-    countours = cv2.erode(countours,(3,3),iterations = 1)
+    #Erode the img, removes some noise
+    countours = cv2.erode(imgWarp,(3,3),iterations = 1)
     
+    #Detect the drivable area from the processed img, retuned imgage/array has drivable pixels set 1 and all other set to 0
     driveable_area = utlis.detect_lane_area(countours)
      
-    #### STEP 3
-    middlePoint,imgHist = utlis.getHistogram(driveable_area,display=True,minPer=0.5,region=4)
-    curveAveragePoint, imgHist = utlis.getHistogram(driveable_area, display=True, minPer=0.9)
+    #Calculate midpoint of drivalbe area using a historam
+    middlePoint,imgHist = utlis.getHistogram(driveable_area,display=True,minPer=0.5,region=4) #Calcualte midoint of line directly in front of car
+    curveAveragePoint, imgHist = utlis.getHistogram(driveable_area, display=True, minPer=0.9) #Calculate midpoint of lane area 
     curveRaw = curveAveragePoint - middlePoint
  
     #### SETP 4
