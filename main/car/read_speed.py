@@ -37,7 +37,9 @@ def read_speed(values=5, motor=0, time_lim=2000):
     for i in range(values+1):
         while True:
             #print(time.time())
+            # Checks if time execution time exceds time_lim the function should apport 
             if (time.time() - timestp > time_lim):
+                # To fill the list with the right amount of values expected when calling function
                 if (len(measured_values)<values):
                     for j in range(values-len(measured_values)):
                         measured_values.append(0)
