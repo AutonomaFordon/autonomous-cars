@@ -1,6 +1,7 @@
-import cv2
-import numpy as np
- 
+import cv2 #Open CV
+import numpy as np #Numpy
+
+#Convert image to binary, so that everyhing is black except of the road markings
 def thresholding(img):
     imgHsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) # converts image values to HSV
     lowerWhite = np.array([0,40,70]) #lower bound
@@ -8,20 +9,19 @@ def thresholding(img):
     maskWhite = cv2.inRange(imgHsv,lowerWhite,upperWhite) #if x camerapixel is within the lower and higher bound, x pixel will be white, 
     #if not, x pixel will be black
     return maskWhite
- 
-def warpImg(img,points,w,h,inv = False): 
-    pts1 = np.float32(points)
-    pts2 = np.float32([[0,0],[w,0],[0,h],[w,h]])
-    if inv:
-        matrix = cv2.getPerspectiveTransform(pts2, pts1)
+
+#Waraps the image so it resembles what it would look like from above
+def warpImg(img,points,w,h,inv = False):
+    pts1 = np.float32(points) #Copy if input img/array
+    pts2 = np.float32([[0,0],[w,0],[0,h],[w,h]]) #Create new/empty array with supplied dimensions 
+    if inv: #If inverted
+        matrix = cv2.getPerspectiveTransform(pts2, pts1) #Get inverted matrix
     else:
-        matrix = cv2.getPerspectiveTransform(pts1,pts2)
-    imgWarp = cv2.warpPerspective(img,matrix,(w,h))
+        matrix = cv2.getPerspectiveTransform(pts1,pts2) #Get matrix
+    imgWarp = cv2.warpPerspective(img,matrix,(w,h)) #Preform the transformation
     return imgWarp
- 
-def nothing(a):
-    pass
- 
+
+#Creates a widow where the user dynamicly can change the values that determine the warping of the image
 def initializeTrackbars(intialTracbarVals,wT=120, hT=60):
     cv2.namedWindow("Trackbars")
     cv2.resizeWindow("Trackbars", 600, 400)
@@ -29,7 +29,8 @@ def initializeTrackbars(intialTracbarVals,wT=120, hT=60):
     cv2.createTrackbar("Height Top", "Trackbars", intialTracbarVals[1], hT, nothing)
     cv2.createTrackbar("Width Bottom", "Trackbars", intialTracbarVals[2],wT//2, nothing)
     cv2.createTrackbar("Height Bottom", "Trackbars", intialTracbarVals[3], hT, nothing)
- 
+
+    
 def valTrackbars(wT=120, hT=60):
     widthTop = cv2.getTrackbarPos("Width Top", "Trackbars")
     heightTop = cv2.getTrackbarPos("Height Top", "Trackbars")
