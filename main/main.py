@@ -57,4 +57,4 @@ while True:
     else: #If a more to the left
         motors.setSpeed(4,0)
     
-    print(curve) #Print the curve value to the console
+    print(curve) #Print the curve  value to the console
