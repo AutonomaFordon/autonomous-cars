@@ -14,7 +14,7 @@ UDP_IP = {
     }
 
 # Password
-conf_key = b"Ghent2021!"
+conf_key = "Ghent2021!"
 
 # Protocol object
 myProtocol = Protocol("192.168.0.5")
