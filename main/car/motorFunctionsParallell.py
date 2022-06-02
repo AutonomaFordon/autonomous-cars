@@ -2,9 +2,6 @@ import RPi.GPIO as GPIO
 import time
 import read_speed as speed
 
-speed_l = 0 #Left motor speed 
-speed_r = 0 #Right motor speed
-
 def setup(pins = [[13,5],[12,6]], read_speed_pins=[20,16]):
     
     #Declare global variables
@@ -44,71 +41,16 @@ def setup(pins = [[13,5],[12,6]], read_speed_pins=[20,16]):
     speed.setup(rsp=read_speed_pins)
 
 #Function used to set speed from main
-def setSpeed(left=0, right=0): 
-    #Declare global variables
-    global speed_l
-    global speed_r
+def setSpeed(curve, speed): 
     
-    #Update global variables
-    speed_l = left
-    speed_r = right
-    
-    diff = (left - right) #Diff, positve = turn left, negative = turn right
-    print(diff)
-    
-    if(diff > 0):
-        pwmr.ChangeDutyCycle(5)
-        pwml.ChangeDutyCycle(75)
-    elif(diff < 0):
-        pwmr.ChangeDutyCycle(75)
-        pwml.ChangeDutyCycle(5)
-    
-
-    
-def trackSpeed(): #Continuously tracks the motors speed and adjust to keep at set value global speed value
-    #Declare global variables
-    global speed_l
-    global speed_r
-    
-    max_time = 0.2 #Max time before timeout, timeout results in speed as
-    
-    #Set start value for PWM-signal
-    pwm_l = 50
-    pwm_r = 50
-    
-    while(True):
-        if(speed_r==0): #If right speed is 0 - turn of left right motor
-            pwmr.ChangeDutyCycle(0)
-        else: 
-            pwm_r = upadateSpeed(pwm_r, speed.read_speed(values=2,motor=1,time_lim=max_time)[1], speed_r) #Read current speed and increase/decrease pwm depending on if current speed is greater or less than set speed
-            pwmr.ChangeDutyCycle(pwm_r) #Update motor setting to new PWM-signal
-            
-            
-        if(speed_l==0): #If left speed is 0 - turn of left left motor
-            pwml.ChangeDutyCycle(0)
-        else:
-            pwm_l = upadateSpeed(pwm_l, speed.read_speed(values=2,motor=0,time_lim=max_time)[1], speed_l) #Read current speed and increase/decrease pwm depending on if current speed is greater or less than set speed
-            pwml.ChangeDutyCycle(pwm_l) #Update motor setting to new PWM-signal
-            
-            
-def upadateSpeed(pwm_in, speed_in, target_speed): #Updates the pwm
-    if(speed_in==0):
-        pwm_out = pwm_in + 5   # if the wheel isn't turning it needs a high
-                                # PWM-signal to start and should therefor increase
-                                # more than if it is moving
+    if(curve > 0):
+        pwmr.ChangeDutyCycle(5*speed)
+        pwml.ChangeDutyCycle(75*speed)
+    elif(curve < 0):
+        pwmr.ChangeDutyCycle(75*speed)
+        pwml.ChangeDutyCycle(5*speed)
     else:
-        # if there is a large differense between target and current speed a larger
-        # change is needed. The change in the PWM-signal is determined using the
-        # difference between target och current speed and multiplying it by 0.1 
-        pwm_out = pwm_in + (target_speed - speed_in)*0.4
-
-    # The PWM signal has to be within the interval: 0 <= PWM <= 100
-    if(pwm_out<0):
-        pwm_out = 0 
-    if(pwm_out>100):
-        pwm_out=100
-
-    return pwm_out
-
-
+        pwmr.ChangeDutyCycle(75*speed)
+        pwml.ChangeDutyCycle(75*speed)
+        
 setup()

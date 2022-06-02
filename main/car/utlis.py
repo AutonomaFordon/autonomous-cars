@@ -110,34 +110,56 @@ def detect_lane_area(img):
 
     height, width = img.shape #Get dimensions
     driveable_area = np.zeros(img.shape, np.uint8) # Create blank area to draw the drivable area on
-    points = [] #Array to store points that define the borders of the drivable area
+    points_l = [] #Array to store points that define the borders of the drivable area
+    #points_r = [] #Array to store points that define the borders of the drivable area
 
-    for row in range(0, height, 10): #For every 10th row in the input image
+    #points_l.append([int(width/2), height])
+    #points_r.append([int(width/2), height])
+    
+    found_curve = False
+
+    for row in range(height-1, 0, -10): #For every 10th row in the input image
+        print(row)
         pixel_l = int(width/2) #Find/reset midpoint
 
+        
         #Walk "step by step" from middle to the left until we find the road markings/a white pixel
         #If we don’t find any road markings we add assume all area to the left at that point is drivable
         while img[row][pixel_l] == 0 and pixel_l != 0:
             pixel_l -= 1
         
-        if(pixel_l == int(width/2)): #If the midlane is detected
-            break
-        
         #When we find the border add coordinate where we found it to points array
-        points.append([pixel_l, row])
+        points_l.append([pixel_l, row])
         
         
         #Repeat process but this time rom middle to the right
         pixel_r = int(width/2)
-        while img[row][pixel_r] == 0 and pixel_r != width-1:
+        while (img[row][pixel_r] == 0 and pixel_r != width-1):
             pixel_r += 1
         
-        if(pixel_l == int(width/2)): #If the midlane is detected
-            break
         #Add cordinate
-        points.insert(0,[pixel_r, row])
+        points_l.insert(0,[pixel_r, row]) ####################################changE TO l
+        
+        if(pixel_l == int(width/2) or pixel_r == int(width/2)): #If the midlane is detected
+            #found_curve = True
+            #points_l.append([int(width/2), row])
+            #Points_r.append([int(width/2), row])
+            break
+        
+        cv2.line(driveable_area,(pixel_r,row),(pixel_l,row),(255),5)
+        
+        
+    #if(found_curve != True):
+        #points_l.append([int(width/2), 0])
+        #points_r.append([int(width/2), 0])
+    
+    #points2_l = np.copy(points_l) #Create a new array with correct datatype
+    #points2_r = np.copy(points_r) #Create a new array with correct datatype
+    
 
-    points2 = np.copy(points) #Create a new array with correct datatype
-    cv2.fillPoly(driveable_area, [points2], color=(255)) #Fill the driveable area using fillPoly and the found edges on the drivable area
+    #cv2.fillPoly(driveable_area, [points2_l], color=(255)) #Fill the driveable area using fillPoly and the found edges on the drivable area
+    #cv2.fillPoly(driveable_area, [points2_r], color=(255)) #Fill the driveable area using fillPoly and the found edges on the drivable area
+    
+    
     return driveable_area
 

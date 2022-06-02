@@ -5,21 +5,20 @@ from picamera import PiCamera
 import time
 import cv2 #Opencv
 from threading import Thread #Used to run multiple threads for parallell operations
+from gpiozero import DistanceSensor
 
 #Global variable definition 
 global stream
 global rawCapture
 
+global ultrasonic
+
 def setup(): #Setup function, run only once
     #Declare global variables
     global stream
     global rawCapture
-    
-    #Setup motors
-    #The trackSpeed function continuously monitors and adjusts motor voltage to keep speed at set value
-    t1 = Thread(target=motors.trackSpeed) #Create parallell thread for controling motors
-    #t1.start() #Start motor control thread 
-    
+    global ultrasonic
+
     #Setup Camera
     camera = PiCamera() #Create camera instance
     camera.resolution = (120, 60) #Set resolution
@@ -28,6 +27,8 @@ def setup(): #Setup function, run only once
     time.sleep(1 )#Give camera time to warmup
     # Setup streem
     stream = camera.capture_continuous(rawCapture, format="bgr", use_video_port=True, resize=(120, 60))
+    
+    ultrasonic = DistanceSensor(echo=17, trigger=4, max_distance=0.5)
 
 def get_frame():
     global rawCapture #Declare golbal variable
@@ -38,23 +39,23 @@ def get_frame():
 
 setup() #Run setup
 while True: 
+    global ultrasonic
+    
     img = get_frame()  #Get next image
     
     
     curve = LaneDetection.getLaneCurve(img,display=2) #Calculate curve (direction of the lane)
+    dist = ultrasonic.distance
     
-    cv2.waitKey(1) #Keep visualization window visable for 1 ms (only used when the debugg window is visable) 
+    if(dist>0.3):
+        dist = 0.3
+    if(dist<0.05):
+        dist = 0
     
     #Update motors according to curve value
-    if(curve == 0.0): #If zero - straight forward
-        motors.setSpeed(4,4)
-    elif(curve<0.00 and curve>-0.03): #If a litle to the right
-        motors.setSpeed(0,2)
-    elif(curve<=-0.03): #If a more to the right
-        motors.setSpeed(0,4)
-    elif(curve>0.00 and curve<0.03): #If a litle to the left
-        motors.setSpeed(2,0)
-    else: #If a more to the left
-        motors.setSpeed(4,0)
+    motors.setSpeed(curve,dist*3.3333)
     
+    print(dist)
+
+    cv2.waitKey(1) #Keep visualization window visable for 1 ms (only used when the debugg window is visable) 
     #print(curve) #Print the curve  value to the console
