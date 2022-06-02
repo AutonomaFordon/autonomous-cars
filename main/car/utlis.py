@@ -1,6 +1,9 @@
 import cv2 #Open CV
 import numpy as np #Numpy
 
+def nothing(null): #Used for trackbars
+    pass
+
 #Convert image to binary, so that everything is black except of the road markings
 def thresholding(img):
     imgHsv = cv2.cvtColor(img,cv2.COLOR_BGR2HSV) # converts image values to HSV
@@ -116,13 +119,21 @@ def detect_lane_area(img):
         #If we don’t find any road markings we add assume all area to the left at that point is drivable
         while img[row][pixel_l] == 0 and pixel_l != 0:
             pixel_l -= 1
+        
+        if(pixel_l == int(width/2)): #If the midlane is detected
+            break
+        
         #When we find the border add coordinate where we found it to points array
         points.append([pixel_l, row])
-
+        
+        
         #Repeat process but this time rom middle to the right
         pixel_r = int(width/2)
         while img[row][pixel_r] == 0 and pixel_r != width-1:
             pixel_r += 1
+        
+        if(pixel_l == int(width/2)): #If the midlane is detected
+            break
         #Add cordinate
         points.insert(0,[pixel_r, row])
 

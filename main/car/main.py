@@ -18,7 +18,7 @@ def setup(): #Setup function, run only once
     #Setup motors
     #The trackSpeed function continuously monitors and adjusts motor voltage to keep speed at set value
     t1 = Thread(target=motors.trackSpeed) #Create parallell thread for controling motors
-    t1.start() #Start motor control thread 
+    #t1.start() #Start motor control thread 
     
     #Setup Camera
     camera = PiCamera() #Create camera instance
@@ -41,7 +41,7 @@ while True:
     img = get_frame()  #Get next image
     
     
-    curve = LaneDetection.getLaneCurve(img,display=0) #Calculate curve (direction of the lane)
+    curve = LaneDetection.getLaneCurve(img,display=2) #Calculate curve (direction of the lane)
     
     cv2.waitKey(1) #Keep visualization window visable for 1 ms (only used when the debugg window is visable) 
     
@@ -49,12 +49,12 @@ while True:
     if(curve == 0.0): #If zero - straight forward
         motors.setSpeed(4,4)
     elif(curve<0.00 and curve>-0.03): #If a litle to the right
-        motors.setSpeed(1,2)
+        motors.setSpeed(0,2)
     elif(curve<=-0.03): #If a more to the right
         motors.setSpeed(0,4)
     elif(curve>0.00 and curve<0.03): #If a litle to the left
-        motors.setSpeed(2,1)
+        motors.setSpeed(2,0)
     else: #If a more to the left
         motors.setSpeed(4,0)
     
-    print(curve) #Print the curve  value to the console
+    #print(curve) #Print the curve  value to the console

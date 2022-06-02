@@ -52,6 +52,17 @@ def setSpeed(left=0, right=0):
     #Update global variables
     speed_l = left
     speed_r = right
+    
+    diff = (left - right) #Diff, positve = turn left, negative = turn right
+    print(diff)
+    
+    if(diff > 0):
+        pwmr.ChangeDutyCycle(5)
+        pwml.ChangeDutyCycle(75)
+    elif(diff < 0):
+        pwmr.ChangeDutyCycle(75)
+        pwml.ChangeDutyCycle(5)
+    
 
     
 def trackSpeed(): #Continuously tracks the motors speed and adjust to keep at set value global speed value
@@ -82,14 +93,14 @@ def trackSpeed(): #Continuously tracks the motors speed and adjust to keep at se
             
 def upadateSpeed(pwm_in, speed_in, target_speed): #Updates the pwm
     if(speed_in==0):
-        pwm_out = pwm_in + 15   # if the wheel isn't turning it needs a high
+        pwm_out = pwm_in + 5   # if the wheel isn't turning it needs a high
                                 # PWM-signal to start and should therefor increase
                                 # more than if it is moving
     else:
         # if there is a large differense between target and current speed a larger
         # change is needed. The change in the PWM-signal is determined using the
         # difference between target och current speed and multiplying it by 0.1 
-        pwm_out = pwm_in + (target_speed - speed_in)*0.1
+        pwm_out = pwm_in + (target_speed - speed_in)*0.4
 
     # The PWM signal has to be within the interval: 0 <= PWM <= 100
     if(pwm_out<0):
@@ -97,7 +108,6 @@ def upadateSpeed(pwm_in, speed_in, target_speed): #Updates the pwm
     if(pwm_out>100):
         pwm_out=100
 
-    print(speed_in)
     return pwm_out
 
 

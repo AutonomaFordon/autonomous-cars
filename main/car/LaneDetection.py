@@ -5,9 +5,6 @@ import time
 
 import utlis  # Supporting functions
 
-# Global vars
-curveList = []  # List of latest curve values
-avgVal = 10  # Set max length of curveList
 
 
 def getLaneCurve(img, display=2):  # Takes an image as input and calculates the curve (direction of the lane)
@@ -36,12 +33,8 @@ def getLaneCurve(img, display=2):  # Takes an image as input and calculates the 
                                               region=4)  # Calcualte midoint of lane directly in front of car
     curveAveragePoint, imgHist = utlis.getHistogram(driveable_area, display=True,
                                                     minPer=0.9)  # Calculate midpoint of lane area
-    curveRaw = curveAveragePoint - middlePoint  # Calculate curve value be taking difference between points
+    curve = curveAveragePoint - middlePoint  # Calculate curve value be taking difference between points
 
-    curveList.append(curveRaw)  # Store result in list
-    if len(curveList) > avgVal:  # Clear 1 element if list is to long
-        curveList.pop(0)
-    curve = int(sum(curveList) / len(curveList))  # Take average value
 
     # Finaly, visualize the steps if display is not set to 0
     if display != 0:
@@ -69,7 +62,7 @@ def getLaneCurve(img, display=2):  # Takes an image as input and calculates the 
     ##We previously had a second debug option for display == 1 but it has been removed
 
     # Normalize the curve value to stay in relative close proximity to 0 (max of 1 and min of -1)
-    curve = curve / 100
+    curve = curve / 25
     if curve > 1: curve == 1
     if curve < -1: curve == -1
 
